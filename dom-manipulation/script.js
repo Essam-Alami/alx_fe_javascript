@@ -180,6 +180,31 @@ document.addEventListener('DOMContentLoaded', () => {
     
         syncDataWithServer();
     });
+
+    async function postQuoteToServer(quote) {
+        try {
+            const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(quote)
+            });
+            const data = await response.json();
+            console.log('Posted quote:', data);
+        } catch (error) {
+            console.error('Error posting quote:', error);
+        }
+    }
+    
+    // Example usage:
+    const newQuote = {
+        title: "The only limit to our realization of tomorrow is our doubts of today.",
+        body: "Motivation",
+        userId: 1
+    };
+    postQuoteToServer(newQuote);
+    
     
 });
 
