@@ -49,3 +49,63 @@ document.addEventListener('DOMContentLoaded', () => {
         showRandomQuote();
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    function saveQuotes() {
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+    }
+
+    function populateCategories() {
+        const categories = [...new Set(quotes.map(quote => quote.category))];
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        });
+    }
+
+    function filterQuotes() {
+        const selectedCategory = categoryFilter.value;
+        const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+        displayQuotes(filteredQuotes);
+        localStorage.setItem('selectedCategory', selectedCategory);
+    }
+
+    function displayQuotes(quotesToDisplay) {
+        quoteDisplay.innerHTML = '';
+        quotesToDisplay.forEach(quote => {
+            const quoteElement = document.createElement('div');
+            quoteElement.textContent = `${quote.text} - ${quote.category}`;
+            quoteDisplay.appendChild(quoteElement);
+        });
+    }
+
+    function loadSelectedCategory() {
+        const selectedCategory = localStorage.getItem('selectedCategory') || 'all';
+        categoryFilter.value = selectedCategory;
+        filterQuotes();
+    }
+
+    populateCategories();
+    loadSelectedCategory();
+    categoryFilter.addEventListener('change', filterQuotes);
+
+    function addQuote(text, category) {
+        quotes.push({ text, category });
+        saveQuotes();
+        if (!Array.from(categoryFilter.options).some(option => option.value === category)) {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        }
+        alert('Quote added successfully!');
+    }
+    
+});
+
