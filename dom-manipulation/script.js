@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: "Motivation",
         userId: 1
     };
-    postQuoteToServer(newQuote);
+    syncQuotes(newQuote);
     
     
 });
